@@ -1,3 +1,5 @@
+require 'rumor/spread'
+
 module Rumor
 
   # Public: A Rumor represents an event that manifests itself
@@ -72,6 +74,7 @@ module Rumor
     #
     # Returns nothing.
     def spread conditions
+      Rumor.router.spread Spread.new(self, conditions)
     end
 
     # Public: Check if the given rumor is a subset of this rumor.
