@@ -29,7 +29,21 @@ module Rumor
 
     # Public: Copy a rumor while altering information.
     def copy &alter
-      Rumor.new.tap &alter
+      Rumor.new(hash).tap &alter
+    end
+
+    # Public: Check if the given rumor is a subset of this rumor.
+    def >= rumor
+      # Check if subject is a subset.
+      _subject = rumor.subject.nil? || rumor.subject == subject
+      # Check if from is a subset.
+      _from = rumor.from.nil? || rumor.from == from
+      # Check if mentions are a subset.
+      _mentions = rumors.mentions.all? { |k, v| mentions[k] == v }
+      # Check if categories are a subset.
+      _categories = (categories | rumor.categories) == categories
+      # All those checks must be true
+      _subject && _from && _mentions && _categories
     end
 
     # Public: Rumor in hash form.
