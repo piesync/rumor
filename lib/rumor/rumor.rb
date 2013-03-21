@@ -51,6 +51,7 @@ module Rumor
     # Public: Tell who/what the rumor is concerning.
     def on object
       @object = object
+      self
     end
 
     # Public: Mention some things in the rumor.
@@ -65,11 +66,13 @@ module Rumor
           new_val
         end
       end
+      self
     end
 
     # Public: Add some tags to the rumor.
     def tag *tags
       @tags << tags
+      self
     end
 
     # Public: Copy a rumor while altering information.
@@ -80,6 +83,7 @@ module Rumor
     # Public: Spread the rumor asynchronously.
     def async async = true
       @async = async
+      self
     end
 
     # Public: Whether this rumor is spread asynchronously.
@@ -97,7 +101,12 @@ module Rumor
     def spread conditions = {}
       @only = conditions[:only]
       @except = conditions[:except]
-      Rumor.spread self
+      spread!
+    end
+
+    # Spread the rumor.
+    def spread!
+      Rumor.spread rumor
     end
 
     # Public: Whether to send this rumor to the given channel.
