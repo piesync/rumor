@@ -30,7 +30,7 @@ module Rumor
     end
 
     # Internal: Channels a Rumor based on its matchers.
-    def put rumor
+    def route spread
     end
   end
 end

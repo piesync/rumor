@@ -10,7 +10,7 @@ module Rumor
   #     include Rumor::Rumoring
   #
   #     def rumor subject
-  #       super.from(current_user)
+  #       super.on(current_user)
   #     end
   #
   #     def upgrade
@@ -19,12 +19,12 @@ module Rumor
   #     end
   #   end
   #
-  module Rumoring
+  module Source
 
     # Public: Acts as a specialized factory for rumors.
     #
     # Returns a new Rumor.
-    def rumour subject
+    def rumor subject = nil
       Rumor::Rumor.new(subject)
     end
   end

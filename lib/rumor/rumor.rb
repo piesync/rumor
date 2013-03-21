@@ -2,15 +2,16 @@ require 'rumor/spread'
 
 module Rumor
 
-  # Public: A Rumor represents an event that manifests itself
-  # in a program. An event frequently describes an action
-  # that a user has executed.
+  # Public: A Rumor represents some knowledge about
+  # something that can be spread.
   #
   # Examples
   #
   #   Rumor.new(:upgraded).on('user1').mention(plan: :tasty).tag(:business).spread
   #
   class Rumor
+    include Mongoid::Document
+    store_in 'rumor.rumors'
 
     # Public: A rumor has a subject, the event name.
     # this is required for every rumor.
@@ -18,28 +19,38 @@ module Rumor
 
     # Public: Wo the rumor is about
     # This is mostly the user that executed the event.
-    attr_accessor :about
+    attr_accessor :object
 
     # Public: The mentions of the rumor.
-    # All the information a rumor mentions about an event.
+    # All the information a rumor mentions.
     attr_accessor :mentions
 
     # Public: Every rumor has some tags.
     # A Rumor can be categorized in multiple optional tags.
     attr_accessor :tags
 
+    # Public: Create Rumor from hash.
+    def self.from_h hash
+      self.new(hash[:subject]).
+        mention(hash[:mentions]).
+        on(hash[:object]).
+        tag(*hash[:tags]).
+        async(hash[:async])
+    end
+
     # Public: Creates a new rumor.
     #
-    # subject - subject of the rumor, required
-    def initialize subject
+    # subject - subject of the rumor.
+    def initialize subject = nil
       @subject = subject
       @tags = []
       @mentions = {}
+      @async = false
     end
 
     # Public: Tell who/what the rumor is concerning.
-    def on about
-      @about = about
+    def on object
+      @object = object
     end
 
     # Public: Mention some things in the rumor.
@@ -57,13 +68,23 @@ module Rumor
     end
 
     # Public: Add some tags to the rumor.
-    def tag tags
+    def tag *tags
       @tags << tags
     end
 
     # Public: Copy a rumor while altering information.
     def copy &alter
       Rumor.new(hash).tap &alter
+    end
+
+    # Public: Spread the rumor asynchronously.
+    def async async = true
+      @async = async
+    end
+
+    # Public: Whether this rumor is spread asynchronously.
+    def async?
+      @async
     end
 
     # Spread the rumor to all applicable channels.
@@ -73,12 +94,12 @@ module Rumor
     #             :except - The channels not to spread to.
     #
     # Returns nothing.
-    def spread conditions
-      Rumor.router.spread Spread.new(self, conditions)
+    def spread conditions = {}
+      Rumor.spread Spread.new(self, conditions)
     end
 
     # Public: Check if the given rumor is a subset of this rumor.
-    def >= rumor
+    def matches? rumor
       # Check if subject is a subset.
       _subject = rumor.subject.nil? || rumor.subject == subject
       # Check if from is a subset.
@@ -94,12 +115,13 @@ module Rumor
     # Public: Rumor in hash form.
     #
     # Returns the rumor converted to a Hash.
-    def hash
+    def to_h
       {
         subject: subject,
-        from: from,
+        object: object,
         mentions: mentions,
-        categories: categories
+        tags: tags,
+        async: async?
       }
     end
   end
