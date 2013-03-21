@@ -95,7 +95,18 @@ module Rumor
     #
     # Returns nothing.
     def spread conditions = {}
-      Rumor.spread Spread.new(self, conditions)
+      @only = conditions[:only]
+      @except = conditions[:except]
+      Rumor.spread self
+    end
+
+    # Public: Whether to send this rumor to the given channel.
+    #
+    # channel - Name of the channel.
+    def to? channel
+      (!@only && !@except) ||
+        (@only && @only.include? channel) ||
+        (@except && !@except.include? channel)
     end
 
     # Public: Check if the given rumor is a subset of this rumor.
