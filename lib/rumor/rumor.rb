@@ -8,7 +8,7 @@ module Rumor
   #   Rumor.new(:upgraded).on('user1').mention(plan: :tasty).tag(:business).spread
   #
   class Rumor
-    
+
     # Public: A rumor has an event name.
     # this is required for every rumor.
     attr_accessor :event
@@ -30,8 +30,7 @@ module Rumor
       self.new(hash[:event]).
         mention(hash[:mentions]).
         on(hash[:subject]).
-        tag(*hash[:tags]).
-        async(hash[:async])
+        tag(*hash[:tags])
     end
 
     # Public: Creates a new rumor.
@@ -117,8 +116,7 @@ module Rumor
         event: event,
         subject: subject,
         mentions: mentions,
-        tags: tags,
-        async: async?
+        tags: tags
       }
     end
   end

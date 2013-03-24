@@ -4,7 +4,6 @@ class TestRumor < MiniTest::Unit::TestCase
 
   class ExampleChannel
     include Rumor::Channel
-
   end
 
   def setup
@@ -39,6 +38,11 @@ class TestRumor < MiniTest::Unit::TestCase
     left.expects(:send).with(@rumor).once
     right.expects(:send).with(@rumor).never
     Rumor.spread @rumor
+  end
+
+  def test_spread_async
+    Rumor::Async::Resque.expects(:spread_async).with(@rumor).once
+    Rumor.spread_async @rumor
   end
 
   def teardown

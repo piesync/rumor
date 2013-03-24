@@ -3,15 +3,15 @@ module Rumor
 
     class Resque
 
-      def spread rumor
-        Resque.enqueue Job, rumor.to_h
+      def self.spread_async rumor
+        ::Resque.enqueue Job, rumor.to_h
       end
 
       class Job
 
         def self.perform rumor_hash
-          # The rumor is not async anymore.
-          rumor = Rumor.from_hash(rumor_hash).async(false)
+          # Deserialize the rumor.
+          rumor = Rumor.from_hash(rumor_hash)
           # Spread again.
           rumor.spread!
         end
