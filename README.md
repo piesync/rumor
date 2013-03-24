@@ -1,29 +1,58 @@
 # Rumor
 
-TODO: Write a gem description
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'rumor'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install rumor
+All event processing is done asynchronously. Different adapters can be used to handle the processing (currently only Resque, default).
 
 ## Usage
 
-TODO: Write usage instructions here
+### Let those controllers rumor
 
-## Contributing
+**First**
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Add rumor capabilities to your controller by adding `include Rumor::Source`.
+
+**Then**
+
+Add rumor instructions in your controller methods.
+
+```ruby
+# Rumor about an event.
+rumor(:upgrade).on('john').mention(plan: plan.id).tag(:important).spread
+# Rumor only to certain channels.
+# Rumor whatever you want.
+rumor(:profit).tag(:finally).spread only: [:mixpanel]
+```
+
+**Where does the rumor come from?**
+
+The `rumor` method is a regular method defined in your controller (defined by including `Source`). You can use it to add default values to your rumors.
+
+```ruby
+class AccountController
+  def rumor event
+    super(event).on(current_user.id).tag(:accounts)
+  end
+end
+```
+
+### Adding Rumor Channels
+
+```ruby
+class MixpanelChannel
+  include Rumor::Channel
+
+  # This is just a regular class.
+  def initialize tracker
+    @tracker = tracker
+  end
+
+  # Matches only upgrade events with the important tag.
+  on(:upgrade) do |rumor|
+    plan = Plan.find rumor.mentions[:plan]
+    @tracker.track 'Upgraded Account', to: plan.name
+  end
+end
+
+# Register the channel.
+tracker = Mixpanel::Tracker.new Environment::MIXPANEL_TOKEN,
+Rumor.register :mixpanel, MixpanelChannel.new tracker
+```

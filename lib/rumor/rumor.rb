@@ -10,12 +10,10 @@ module Rumor
   #   Rumor.new(:upgraded).on('user1').mention(plan: :tasty).tag(:business).spread
   #
   class Rumor
-    include Mongoid::Document
-    store_in 'rumor.rumors'
-
-    # Public: A rumor has a subject, the event name.
+    
+    # Public: A rumor has an event name.
     # this is required for every rumor.
-    attr_accessor :subject
+    attr_accessor :event
 
     # Public: Wo the rumor is about
     # This is mostly the user that executed the event.
@@ -31,7 +29,7 @@ module Rumor
 
     # Public: Create Rumor from hash.
     def self.from_h hash
-      self.new(hash[:subject]).
+      self.new(hash[:event]).
         mention(hash[:mentions]).
         on(hash[:object]).
         tag(*hash[:tags]).
@@ -41,8 +39,8 @@ module Rumor
     # Public: Creates a new rumor.
     #
     # subject - subject of the rumor.
-    def initialize subject = nil
-      @subject = subject
+    def initialize event
+      @event = event
       @tags = []
       @mentions = {}
       @async = false
@@ -80,17 +78,6 @@ module Rumor
       Rumor.new(hash).tap &alter
     end
 
-    # Public: Spread the rumor asynchronously.
-    def async async = true
-      @async = async
-      self
-    end
-
-    # Public: Whether this rumor is spread asynchronously.
-    def async?
-      @async
-    end
-
     # Spread the rumor to all applicable channels.
     #
     # conditions - some conditions on the spreading (Hash).
@@ -106,7 +93,13 @@ module Rumor
 
     # Spread the rumor.
     def spread!
+      @time = Time.now
       Rumor.spread rumor
+    end
+
+    # Public: The time the rumor was spread.
+    def time
+      @time
     end
 
     # Public: Whether to send this rumor to the given channel.
@@ -118,26 +111,12 @@ module Rumor
         (@except && !@except.include? channel)
     end
 
-    # Public: Check if the given rumor is a subset of this rumor.
-    def matches? rumor
-      # Check if subject is a subset.
-      _subject = rumor.subject.nil? || rumor.subject == subject
-      # Check if from is a subset.
-      _from = rumor.from.nil? || rumor.from == from
-      # Check if mentions are a subset.
-      _mentions = rumors.mentions.all? { |k, v| mentions[k] == v }
-      # Check if categories are a subset.
-      _tags = (tags | rumor.tags) == categories
-      # All those checks must be true
-      _subject && _from && _mentions && _categories
-    end
-
     # Public: Rumor in hash form.
     #
     # Returns the rumor converted to a Hash.
     def to_h
       {
-        subject: subject,
+        event: event,
         object: object,
         mentions: mentions,
         tags: tags,

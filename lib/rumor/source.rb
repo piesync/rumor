@@ -24,8 +24,8 @@ module Rumor
     # Public: Acts as a specialized factory for rumors.
     #
     # Returns a new Rumor.
-    def rumor subject = nil
-      Rumor::Rumor.new(subject)
+    def rumor event
+      Rumor::Rumor.new(event)
     end
   end
 end
