@@ -1,5 +1,3 @@
-require 'rumor/spread'
-
 module Rumor
 
   # Public: A Rumor represents some knowledge about
@@ -107,8 +105,8 @@ module Rumor
     # channel - Name of the channel.
     def to? channel
       (!@only && !@except) ||
-        (@only && @only.include? channel) ||
-        (@except && !@except.include? channel)
+        (@only && @only.include?(channel)) ||
+        (@except && !@except.include?(channel))
     end
 
     # Public: Rumor in hash form.

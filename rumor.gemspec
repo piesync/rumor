@@ -8,12 +8,18 @@ Gem::Specification.new do |gem|
   gem.version       = Rumor::VERSION
   gem.authors       = ["Mattias Putman"]
   gem.email         = ["mattias.putman@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{Rumor}
+  gem.summary       = %q{Rumor}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
+
+  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'guard'
+  gem.add_development_dependency 'guard-minitest'
+  gem.add_development_dependency 'mocha'
+  gem.add_development_dependency 'rb-fsevent', '~> 0.9'
 end
