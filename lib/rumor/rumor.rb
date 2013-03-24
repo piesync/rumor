@@ -17,7 +17,7 @@ module Rumor
 
     # Public: Wo the rumor is about
     # This is mostly the user that executed the event.
-    attr_accessor :object
+    attr_accessor :subject
 
     # Public: The mentions of the rumor.
     # All the information a rumor mentions.
@@ -31,14 +31,14 @@ module Rumor
     def self.from_h hash
       self.new(hash[:event]).
         mention(hash[:mentions]).
-        on(hash[:object]).
+        on(hash[:subject]).
         tag(*hash[:tags]).
         async(hash[:async])
     end
 
     # Public: Creates a new rumor.
     #
-    # subject - subject of the rumor.
+    # event - event of the rumor.
     def initialize event
       @event = event
       @tags = []
@@ -47,8 +47,8 @@ module Rumor
     end
 
     # Public: Tell who/what the rumor is concerning.
-    def on object
-      @object = object
+    def on subject
+      @subject = subject
       self
     end
 
@@ -117,7 +117,7 @@ module Rumor
     def to_h
       {
         event: event,
-        object: object,
+        subject: subject,
         mentions: mentions,
         tags: tags,
         async: async?

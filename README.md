@@ -28,6 +28,8 @@ The `rumor` method is a regular method defined in your controller (defined by in
 
 ```ruby
 class AccountController
+  include Rumor::Source
+
   def rumor event
     super(event).on(current_user.id).tag(:accounts)
   end
@@ -47,6 +49,8 @@ class MixpanelChannel
 
   # Matches only upgrade events with the important tag.
   on(:upgrade) do |rumor|
+    rumor.subject # => 'john'
+    rumor.tag # => [:important]
     plan = Plan.find rumor.mentions[:plan]
     @tracker.track 'Upgraded Account', to: plan.name
   end
