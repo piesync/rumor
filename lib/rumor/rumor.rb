@@ -83,7 +83,7 @@ module Rumor
     #
     # Returns nothing.
     def spread conditions = {}
-      @time = Time.now
+      @time = Time.now.utc
       @only = conditions[:only]
       @except = conditions[:except]
       ::Rumor.spread_async self
