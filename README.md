@@ -39,8 +39,7 @@ end
 ### Adding Rumor Channels
 
 ```ruby
-class MixpanelChannel
-  include Rumor::Channel
+class MixpanelChannel < Rumor::Channel
 
   # This is just a regular class.
   def initialize tracker
