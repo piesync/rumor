@@ -2,8 +2,7 @@ require 'spec_helper'
 
 class TestRumor < MiniTest::Unit::TestCase
 
-  class ExampleChannel
-    include Rumor::Channel
+  class ExampleChannel < Rumor::Channel
   end
 
   def setup

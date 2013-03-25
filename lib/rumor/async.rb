@@ -13,7 +13,7 @@ module Rumor
           # Deserialize the rumor.
           rumor = Rumor.from_hash(rumor_hash)
           # Spread again.
-          rumor.spread!
+          Rumor.spread rumor
         end
       end
     end

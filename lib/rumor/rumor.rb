@@ -40,7 +40,6 @@ module Rumor
       @event = event
       @tags = []
       @mentions = {}
-      @async = false
     end
 
     # Public: Tell who/what the rumor is concerning.
@@ -66,7 +65,7 @@ module Rumor
 
     # Public: Add some tags to the rumor.
     def tag *tags
-      @tags << tags
+      @tags += tags
       self
     end
 
@@ -83,15 +82,10 @@ module Rumor
     #
     # Returns nothing.
     def spread conditions = {}
+      @time = Time.now
       @only = conditions[:only]
       @except = conditions[:except]
-      spread!
-    end
-
-    # Spread the rumor.
-    def spread!
-      @time = Time.now
-      Rumor.spread rumor
+      Rumor.spread_async rumor
     end
 
     # Public: The time the rumor was spread.
