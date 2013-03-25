@@ -18,7 +18,6 @@ module Rumor
           hash[:tags].map! &:to_sym
           # Deserialize the rumor.
           rumor = Rumor.from_h hash
-          rumor.mentions =
           # Spread again.
           ::Rumor.spread rumor
         end
