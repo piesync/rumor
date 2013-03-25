@@ -6,6 +6,20 @@ class TestRumor < MiniTest::Unit::TestCase
   class ExampleChannel < Rumor::Channel
   end
 
+  class IntegrationChannel < Rumor::Channel
+    def initialize delegate
+      @delegate = delegate
+    end
+
+    on(:upgrade) do |rumor|
+      @delegate.upgrade
+    end
+
+    on(:install) do |rumor|
+      @delegate.install
+    end
+  end
+
   def setup
     @channel = ExampleChannel.new
     @rumor = Rumor::Rumor.new(:upgrade).mention price: 8
@@ -46,7 +60,10 @@ class TestRumor < MiniTest::Unit::TestCase
   end
 
   def test_integration
-    # ExampleChannel.on(:upgrade) do
+    channel1 = mock
+    Rumor.register :channel1, IntegrationChannel.new(channel1)
+    channel1.expects(:upgrade)
+    rumor(:upgrade).mention(plan: :enterprise).spread
   end
 
   def teardown

@@ -10,12 +10,25 @@ module Rumor
       end
 
       class Job
+        @queue = :rumor
 
         def self.perform rumor_hash
+          hash = hash_to_symbols rumor_hash
+          hash[:mentions] = hash_to_symbols hash[:mentions]
+          hash[:tags].map! &:to_sym
           # Deserialize the rumor.
-          rumor = Rumor.from_hash(rumor_hash)
+          rumor = Rumor.from_h hash
+          rumor.mentions =
           # Spread again.
-          Rumor.spread rumor
+          ::Rumor.spread rumor
+        end
+
+        def self.hash_to_symbols hash
+          symbol_hash = {}
+          hash.each do |k,v|
+            symbol_hash[k.to_sym] = v
+          end
+          symbol_hash
         end
       end
     end

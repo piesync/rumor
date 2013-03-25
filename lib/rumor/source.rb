@@ -25,7 +25,7 @@ module Rumor
     #
     # Returns a new Rumor.
     def rumor event
-      Rumor::Rumor.new(event)
+      Rumor.new(event)
     end
   end
 end

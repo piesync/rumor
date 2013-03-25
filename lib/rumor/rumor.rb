@@ -50,7 +50,7 @@ module Rumor
 
     # Public: Mention some things in the rumor.
     # Merges with already mentioned information.
-    def mention mentions
+    def mention mentions = {}
       @mentions.merge!(mentions) do |key, old_val, new_val|
         if old.kind_of?(Array)
           old_val + new_val
@@ -85,7 +85,7 @@ module Rumor
       @time = Time.now
       @only = conditions[:only]
       @except = conditions[:except]
-      Rumor.spread_async rumor
+      ::Rumor.spread_async self
     end
 
     # Public: The time the rumor was spread.
