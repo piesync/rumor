@@ -27,7 +27,7 @@ module Rumor
 
     # Public: Create Rumor from hash.
     def self.from_h hash
-      self.new(hash[:event]).
+      self.new(hash[:event], hash[:time]).
         mention(hash[:mentions]).
         on(hash[:subject]).
         tag(*hash[:tags])
@@ -36,10 +36,11 @@ module Rumor
     # Public: Creates a new rumor.
     #
     # event - event of the rumor.
-    def initialize event
+    def initialize event, time = nil
       @event = event
       @tags = []
       @mentions = {}
+      @time = time
     end
 
     # Public: Tell who/what the rumor is concerning.
@@ -110,7 +111,8 @@ module Rumor
         event: event,
         subject: subject,
         mentions: mentions,
-        tags: tags
+        tags: tags,
+        time: time
       }
     end
   end
