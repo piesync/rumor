@@ -16,6 +16,7 @@ module Rumor
           hash = hash_to_symbols rumor_hash
           hash[:mentions] = hash_to_symbols hash[:mentions]
           hash[:tags].map! &:to_sym
+          hash[:time] = Time.new hash[:time]
           # Deserialize the rumor.
           rumor = Rumor.from_h hash
           # Spread again.
