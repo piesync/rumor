@@ -14,7 +14,8 @@ module Rumor
 
     # Internal: Send a Rumor to this channel.
     def send rumor
-      self.class.handlers[rumor.event].call rumor
+      handle = self.class.handlers[rumor.event]
+      self.instance_exec rumor, &handle
     end
 
     # Public: Catch all events with specified name.

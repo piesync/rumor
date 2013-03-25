@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 class TestRumor < MiniTest::Unit::TestCase
+  include Rumor::Source
 
   class ExampleChannel < Rumor::Channel
   end
@@ -42,6 +43,10 @@ class TestRumor < MiniTest::Unit::TestCase
   def test_spread_async
     Rumor::Async::Resque.expects(:spread_async).with(@rumor).once
     Rumor.spread_async @rumor
+  end
+
+  def test_integration
+    # ExampleChannel.on(:upgrade) do
   end
 
   def teardown

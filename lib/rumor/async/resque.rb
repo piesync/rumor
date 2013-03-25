@@ -1,3 +1,5 @@
+require 'resque'
+
 module Rumor
   module Async
 
@@ -19,3 +21,5 @@ module Rumor
     end
   end
 end
+
+Rumor.async_handler = Rumor::Async::Resque

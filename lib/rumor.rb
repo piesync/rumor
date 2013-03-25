@@ -1,7 +1,7 @@
 require "rumor/version"
 require 'rumor/channel'
 require 'rumor/rumor'
-require 'rumor/async'
+require 'rumor/source'
 
 module Rumor
   class << self
@@ -10,7 +10,6 @@ module Rumor
   end
 
   @channels = {}
-  @async_handler = Async::Resque
 
   # Internal: Register a new channel.
   def self.register name, channel

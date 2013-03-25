@@ -3,14 +3,13 @@ require 'spec_helper'
 class TestChannel < MiniTest::Unit::TestCase
 
   class ExampleChannel < Rumor::Channel
+    def helper
+      "helper"
+    end
   end
 
   def setup
     @channel = ExampleChannel.new
-    @rumor = Rumor::Rumor.new(:install).
-      tag(:business).
-      on(:cool_user).
-      mention(plan: :enterprise)
   end
 
   def test_define_handler
@@ -22,16 +21,26 @@ class TestChannel < MiniTest::Unit::TestCase
 
   def test_send_rumor
     upgrade = proc {}
-    install = proc {}
+    install = proc { |rumor| @rumor = rumor }
     ExampleChannel.on(:upgrade, &upgrade)
     ExampleChannel.on(:install, &install)
 
-    install.expects(:call).with do |rumor|
-      rumor.event == :install&& rumor.tags == [:business] &&
-        rumor.mentions == { plan: :enterprise } && rumor.subject == :cool_user
-    end
+    @channel.send Rumor::Rumor.new(:install).
+      tag(:business).
+      on(:cool_user).
+      mention(plan: :enterprise)
 
-    @channel.send @rumor
+    rumor = @channel.instance_variable_get :@rumor
+    assert rumor.event == :install && rumor.tags == [:business] &&
+        rumor.mentions == { plan: :enterprise } && rumor.subject == :cool_user
+  end
+
+  def test_use_methods
+    ExampleChannel.on(:method_test) do |rumor|
+      helper
+    end
+    @channel.expects(:helper).once
+    @channel.send Rumor::Rumor.new(:method_test)
   end
 
   def teardown
