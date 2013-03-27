@@ -53,9 +53,9 @@ module Rumor
     # Merges with already mentioned information.
     def mention mentions = {}
       @mentions.merge!(mentions) do |key, old_val, new_val|
-        if old.kind_of?(Array)
+        if old_val.kind_of?(Array)
           old_val + new_val
-        elsif old.kind_of?(Hash)
+        elsif old_val.kind_of?(Hash)
           old_val.merge new_val
         else
           new_val
