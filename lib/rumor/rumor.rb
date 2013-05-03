@@ -78,15 +78,21 @@ module Rumor
     # Spread the rumor to all applicable channels.
     #
     # conditions - some conditions on the spreading (Hash).
-    #             :only - The channels to spread to (and none other).
+    #             :only   - The channels to spread to (and none other).
     #             :except - The channels not to spread to.
+    #             :async  - Whether to spread asynchronously (default: true).
     #
     # Returns nothing.
     def spread conditions = {}
       @time = Time.now.utc
       @only = conditions[:only]
       @except = conditions[:except]
-      ::Rumor.spread_async self
+      async = conditions[:async] || true
+      if async
+        ::Rumor.spread_async self
+      else
+        ::Rumor.spread self
+      end
     end
 
     # Public: The time the rumor was spread.
