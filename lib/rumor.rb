@@ -31,7 +31,7 @@ module Rumor
 
   # Internal: Get a channel.
   def self.channel name
-    self.channels[name]
+    self.channels[name][:channel]
   end
 
   # Internal: Spread a rumor to required channels.
@@ -40,8 +40,8 @@ module Rumor
       # Skip if we don't need to send to this channel.
       next unless rumor.to?(name)
       # Get the channel and the options.
-      channel = channel[:channel]
       options = channel[:options].merge! options
+      channel = channel[:channel]
       # Send via async handler if async.
       # Directly to the channel if not.
       if options[:async]

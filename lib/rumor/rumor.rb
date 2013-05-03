@@ -37,7 +37,7 @@ module Rumor
     #
     # event - event of the rumor.
     def initialize event, time = nil
-      @event = event
+      @event = event.to_sym
       @tags = []
       @mentions = {}
       @time = time
@@ -115,6 +115,14 @@ module Rumor
         tags: tags,
         time: time
       }
+    end
+
+    # equality
+    def == other
+      self.event == other.event &&
+        self.subject == other.subject &&
+        self.mentions == other.mentions &&
+        self.tags == other.tags
     end
   end
 end

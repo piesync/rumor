@@ -25,7 +25,7 @@ class TestChannel < MiniTest::Unit::TestCase
     ExampleChannel.on(:upgrade, &upgrade)
     ExampleChannel.on(:install, &install)
 
-    @channel.send Rumor::Rumor.new(:install).
+    @channel.handle Rumor::Rumor.new(:install).
       tag(:business).
       on(:cool_user).
       mention(plan: :enterprise)
@@ -40,7 +40,7 @@ class TestChannel < MiniTest::Unit::TestCase
       helper
     end
     @channel.expects(:helper).once
-    @channel.send Rumor::Rumor.new(:method_test)
+    @channel.handle Rumor::Rumor.new(:method_test)
   end
 
   def teardown

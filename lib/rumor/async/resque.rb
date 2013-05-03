@@ -21,7 +21,8 @@ module Rumor
           # Deserialize the rumor.
           rumor = Rumor.from_h hash
           # Send to the channel again.
-          ::Rumor.channel(channel_name).send rumor
+          ::Rumor.channel(channel_name.to_sym).handle rumor
+          nil
         end
 
         def self.hash_to_symbols hash
