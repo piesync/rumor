@@ -38,26 +38,33 @@ class TestRumor < MiniTest::Unit::TestCase
     left, right = ExampleChannel.new, ExampleChannel.new
     Rumor.register :left, left
     Rumor.register :right, right
-    left.expects(:handle).with(@rumor).once
-    right.expects(:handle).with(@rumor).once
+    left.expects(:handle).with(@rumor, anything).once
+    right.expects(:handle).with(@rumor, anything).once
     @rumor.spread
   end
 
   def test_spread_filter
     left, right = ExampleChannel.new, ExampleChannel.new
-    @rumor.stubs(:to?).with(:left).returns true
-    @rumor.stubs(:to?).with(:right).returns false
     Rumor.register :left, left
     Rumor.register :right, right
-    left.expects(:handle).with(@rumor).once
-    right.expects(:handle).with(@rumor).never
-    @rumor.spread
+    left.expects(:handle).with(@rumor, anything).once
+    right.expects(:handle).with(@rumor, anything).never
+    @rumor.spread only: [:left]
   end
 
   def test_spread_async
     Rumor.register :example, @channel
     Rumor::Async::Resque.expects(:send_async).with(:example, @rumor).once
     @rumor.spread async: true
+  end
+
+  def test_spread_sync_async
+    async, sync = ExampleChannel.new, ExampleChannel.new
+    Rumor.register :async, async
+    Rumor.register :sync, sync, async: false
+    ::Resque.expects(:enqueue).once
+    sync.expects(:handle).with(@rumor, anything)
+    @rumor.spread
   end
 
   def test_integration

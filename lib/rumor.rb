@@ -23,7 +23,7 @@ module Rumor
     self.channels[name] = {
       channel: channel,
       options: {
-        async: options[:async] || true
+        async: (options[:async].nil? ? true : false)
       }
     }
     nil
@@ -35,19 +35,19 @@ module Rumor
   end
 
   # Internal: Spread a rumor to required channels.
-  def self.spread rumor, options = {}
+  def self.spread rumor, options_override = {}
     self.channels.each do |name, channel|
       # Skip if we don't need to send to this channel.
       next unless rumor.to?(name)
       # Get the channel and the options.
-      options = channel[:options].merge! options
+      options = channel[:options].merge! options_override
       channel = channel[:channel]
       # Send via async handler if async.
       # Directly to the channel if not.
       if options[:async]
         self.async_handler.send_async name, rumor
       else
-        channel.send rumor, options
+        channel.handle rumor, options
       end
     end
   end
