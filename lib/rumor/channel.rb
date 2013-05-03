@@ -13,7 +13,7 @@ module Rumor
     end
 
     # Internal: Send a Rumor to this channel.
-    def send rumor
+    def send rumor, options = {}
       handle = self.class.handlers[rumor.event.to_sym]
       # Only execute the handle when one is found.
       # Do not error here, because a channel does

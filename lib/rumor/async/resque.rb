@@ -6,22 +6,22 @@ module Rumor
 
     class Resque
 
-      def self.spread_async rumor
-        ::Resque.enqueue Job, rumor.to_h
+      def self.send_async channel_name, rumor
+        ::Resque.enqueue Job, channel_name, rumor.to_h
       end
 
       class Job
         @queue = :rumor
 
-        def self.perform rumor_hash
+        def self.perform channel_name, rumor_hash
           hash = hash_to_symbols rumor_hash
           hash[:mentions] = hash_to_symbols hash[:mentions]
           hash[:tags].map! &:to_sym
           hash[:time] = Time.parse hash[:time]
           # Deserialize the rumor.
           rumor = Rumor.from_h hash
-          # Spread again.
-          ::Rumor.spread rumor
+          # Send to the channel again.
+          ::Rumor.channel(channel_name).send rumor
         end
 
         def self.hash_to_symbols hash

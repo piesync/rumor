@@ -85,14 +85,9 @@ module Rumor
     # Returns nothing.
     def spread conditions = {}
       @time = Time.now.utc
-      @only = conditions[:only]
-      @except = conditions[:except]
-      async = conditions[:async] || true
-      if async
-        ::Rumor.spread_async self
-      else
-        ::Rumor.spread self
-      end
+      @only = conditions.delete :only
+      @except = conditions.delete :except
+      ::Rumor.spread self, conditions
     end
 
     # Public: The time the rumor was spread.
