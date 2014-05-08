@@ -23,6 +23,9 @@ class TestRumor < MiniTest::Unit::TestCase
   def setup
     @channel = ExampleChannel.new
     @rumor = Rumor::Rumor.new(:upgrade).mention price: 8
+
+    Celluloid.shutdown
+    Celluloid.boot
   end
 
   def test_channels_initialized
@@ -52,10 +55,19 @@ class TestRumor < MiniTest::Unit::TestCase
     @rumor.spread only: [:left]
   end
 
-  def test_spread_async
+  def test_spread_async_resque
+    Rumor.async_handler = Rumor::Async::Resque
     Rumor.register :example, @channel
     Rumor::Async::Resque.expects(:send_async).with(:example, @rumor).once
     @rumor.spread async: true
+  end
+
+  def test_spread_async_suckerpunch
+    Rumor.async_handler = Rumor::Async::SuckerPunch
+    Rumor.register :example, @channel
+    Rumor::Async::SuckerPunch.expects(:send_async).with(:example, @rumor).once
+    @rumor.spread async: true
+    Rumor.async_handler = Rumor::Async::Resque
   end
 
   def test_spread_sync_async
@@ -77,5 +89,6 @@ class TestRumor < MiniTest::Unit::TestCase
 
   def teardown
     Rumor.channels = {}
+    Celluloid.shutdown
   end
 end

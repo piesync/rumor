@@ -10,6 +10,8 @@ class TestChannel < MiniTest::Unit::TestCase
 
   def setup
     @channel = ExampleChannel.new
+    Celluloid.shutdown
+    Celluloid.boot
   end
 
   def test_define_handler
