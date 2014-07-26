@@ -1,5 +1,7 @@
 # Rumor
 
+Need Analytics? Just spread the Rumor! Rumor is made for tracking important events across different channels.
+
 All event processing is done asynchronously. Different adapters can be used to handle the processing (currently only Resque, default).
 
 ## Usage
@@ -59,3 +61,25 @@ end
 tracker = Mixpanel::Tracker.new Environment::MIXPANEL_TOKEN,
 Rumor.register :mixpanel, MixpanelChannel.new tracker
 ```
+
+## Help and Discussion
+
+If you need help you can contact us by sending a message to:
+[oss@piesync.com][mail].
+
+[mail]:   mailto:oss@piesync.com
+
+If you believe you've found a bug, please report it at:
+https://github.com/piesync/rumor/issues
+
+
+## Contributing to Rumor
+
+* Please fork Rumor on github
+* Make your changes and send us a pull request with a brief description of your addition
+* We will review all pull requests and merge them upon approval
+
+## Copyright
+
+Copyright (c) 2014 PieSync.
+
