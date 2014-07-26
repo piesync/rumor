@@ -1,6 +1,7 @@
 # Rumor
 [![Build Status](https://secure.travis-ci.org/piesync/rumor.png?branch=master)](http://travis-ci.org/piesync/rumor)
 [![Code Climate](https://codeclimate.com/github/piesync/rumor.png)](https://codeclimate.com/github/piesync/rumor)
+[![Test Coverage](https://codeclimate.com/github/piesync/rumor/coverage.png)](https://codeclimate.com/github/piesync/rumor)
 
 Need Analytics? Just spread the Rumor! Rumor is made for tracking important events across different channels.
 
