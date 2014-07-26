@@ -1,0 +1,13 @@
+language: ruby
+rvm:
+  - 2.1.1
+  - 1.9.3
+install: bundle install --without development --deployment
+cache:
+  directories:
+    - vendor/bundle
+before_script: ruby migrate.rb
+addons:
+  code_climate:
+    repo_token:
+      secure: "DP8iJECqDSdpWYZwA5Y0r7FPsxbZkeGn4fVZqxXZrqZ95y50gnRyvXqB6KW2CpD81qE7A9/w9RNMhyohB0x3MVKefRTq2dX+g478tkSojjqMi3neg3O0hfo8wX2QquyPUcDQ/6aJHD/tQ35KivNSHl36BoabubVGAFaUmQdHA7g="
