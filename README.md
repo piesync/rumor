@@ -1,4 +1,5 @@
 # Rumor
+[![Code Climate](https://codeclimate.com/github/piesync/rumor.png)](https://codeclimate.com/github/piesync/rumor)
 
 Need Analytics? Just spread the Rumor! Rumor is made for tracking important events across different channels.
 
