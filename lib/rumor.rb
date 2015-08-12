@@ -23,7 +23,7 @@ module Rumor
     self.channels[name] = {
       channel: channel,
       options: {
-        async: (options[:async].nil? ? true : false)
+        async: options.fetch(:async, true)
       }
     }
     nil
