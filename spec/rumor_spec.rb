@@ -73,7 +73,7 @@ class TestRumor < MiniTest::Unit::TestCase
   def test_spread_sync_async
     async1, async2, sync = ExampleChannel.new, ExampleChannel.new, ExampleChannel.new
     Rumor.register :async1, async1
-    Rumor.register :async2, async2
+    Rumor.register :async2, async2, async: true
     Rumor.register :sync, sync, async: false
     ::Resque.expects(:enqueue).twice
     sync.expects(:handle).with(@rumor, anything)
