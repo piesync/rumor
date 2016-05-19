@@ -23,9 +23,6 @@ class TestRumor < MiniTest::Unit::TestCase
   def setup
     @channel = ExampleChannel.new
     @rumor = Rumor::Rumor.new(:upgrade).mention price: 8
-
-    Celluloid.shutdown
-    Celluloid.boot
   end
 
   def test_channels_initialized
@@ -89,6 +86,5 @@ class TestRumor < MiniTest::Unit::TestCase
 
   def teardown
     Rumor.channels = {}
-    Celluloid.shutdown
   end
 end

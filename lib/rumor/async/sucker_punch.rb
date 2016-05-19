@@ -7,7 +7,7 @@ module Rumor
     class SuckerPunch
 
       def self.send_async channel_name, rumor
-        Job.new.async.perform(channel_name, rumor)
+        Job.perform_async(channel_name, rumor)
       end
 
       class Job
