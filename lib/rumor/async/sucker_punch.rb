@@ -12,6 +12,7 @@ module Rumor
 
       class Job
         include ::SuckerPunch::Job
+        workers ENV["SUCKERPUNCH_WORKERS"] ? ENV["SUCKERPUNCH_WORKERS"].to_i : 2
 
         def perform channel_name, rumor
           # Send to the channel again.
